@@ -40,6 +40,8 @@ Thumbs.db
 chroma_db/
 pdfs/*.pdf
 markdown_outputs/*.md
+!markdown_outputs/README.md
+!pdfs/README.md
 *.log
 
 # Environment variables
