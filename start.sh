@@ -60,7 +60,13 @@ fi
 # Stop any existing containers
 echo ""
 echo "Stopping existing containers (if any)..."
-docker-compose down 2>/dev/null || docker compose down 2>/dev/null || true
+if docker compose version &> /dev/null; then
+    DOCKER_COMPOSE_CMD="docker compose"
+else
+    DOCKER_COMPOSE_CMD="docker-compose"
+fi
+
+$DOCKER_COMPOSE_CMD down 2>/dev/null || true
 
 # Build and start containers
 echo ""
@@ -68,12 +74,7 @@ echo "Building and starting Docker containers..."
 echo "This may take a few minutes on the first run..."
 echo ""
 
-# Try docker compose first (newer syntax), fallback to docker-compose
-if docker compose version &> /dev/null; then
-    docker compose up -d --build
-else
-    docker-compose up -d --build
-fi
+$DOCKER_COMPOSE_CMD up -d --build
 
 # Wait for services to be ready
 echo ""
@@ -81,11 +82,11 @@ echo "Waiting for services to start..."
 sleep 5
 
 # Check if containers are running
-if docker-compose ps 2>/dev/null | grep -q "Up" || docker compose ps 2>/dev/null | grep -q "running"; then
+if $DOCKER_COMPOSE_CMD ps | grep -q -E "(Up|running)"; then
     echo "✓ Containers are running"
 else
     echo "⚠ Warning: Containers may not have started correctly"
-    echo "Run 'docker-compose logs' or 'docker compose logs' to check the logs"
+    echo "Run '$DOCKER_COMPOSE_CMD logs' to check the logs"
 fi
 
 echo ""
@@ -110,11 +111,11 @@ echo "💾 All data is saved in your repository!"
 echo "   You can commit and push changes with: git add . && git commit -m 'Update data' && git push"
 echo ""
 echo "📝 Useful commands:"
-echo "  • View logs:          docker-compose logs -f"
-echo "  • Stop services:      docker-compose down"
-echo "  • Restart services:   docker-compose restart"
-echo "  • Rebuild containers: docker-compose up -d --build"
+echo "  • View logs:          $DOCKER_COMPOSE_CMD logs -f"
+echo "  • Stop services:      $DOCKER_COMPOSE_CMD down"
+echo "  • Restart services:   $DOCKER_COMPOSE_CMD restart"
+echo "  • Rebuild containers: $DOCKER_COMPOSE_CMD up -d --build"
 echo ""
 echo "🔍 To check container status:"
-echo "  docker-compose ps"
+echo "  $DOCKER_COMPOSE_CMD ps"
 echo ""
