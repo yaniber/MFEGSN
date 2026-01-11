@@ -42,7 +42,7 @@ git commit -m "Mise à jour des données"
 git push
 ```
 
-**Note :** Les fichiers `.pdf`, `.md` et le contenu de `chroma_db` sont ignorés par défaut dans `.gitignore` pour éviter de commiter des fichiers volumineux. Modifiez `.gitignore` si vous souhaitez les inclure.
+**Note :** Tous les fichiers de données (PDFs, Markdown, base de données vectorielle) sont suivis par git. Cela permet de sauvegarder l'intégralité de vos données et documents traités.
 
 ---
 

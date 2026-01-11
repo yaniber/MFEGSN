@@ -76,7 +76,7 @@ Les dossiers suivants du repository sont montés dans les containers Docker :
 Grâce aux bind mounts, **toutes les modifications sont immédiatement reflétées dans votre repository local**. Pour sauvegarder vos données :
 
 ```bash
-# Ajouter les fichiers (selon votre .gitignore)
+# Ajouter les fichiers
 git add pdfs markdown_outputs chroma_db
 
 # Commiter les changements
@@ -86,7 +86,7 @@ git commit -m "Mise à jour des données"
 git push
 ```
 
-**Note** : Par défaut, le `.gitignore` ignore les fichiers PDF et Markdown individuels pour éviter de gros commits. Si vous souhaitez les inclure, modifiez le `.gitignore`.
+**Note** : Tous les fichiers de données (PDFs, Markdown, base de données vectorielle) sont maintenant suivis par git et peuvent être commités. Cela permet une sauvegarde complète de vos données.
 
 ## 🔧 Commandes Utiles
 
