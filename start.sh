@@ -4,6 +4,15 @@
 
 set -e
 
+# Function to detect and set Docker Compose command
+get_docker_compose_cmd() {
+    if docker compose version &> /dev/null; then
+        echo "docker compose"
+    else
+        echo "docker-compose"
+    fi
+}
+
 echo "=== MFEGSN PDF RAG System - Docker Quick Start ==="
 echo ""
 
@@ -60,12 +69,7 @@ fi
 # Stop any existing containers
 echo ""
 echo "Stopping existing containers (if any)..."
-if docker compose version &> /dev/null; then
-    DOCKER_COMPOSE_CMD="docker compose"
-else
-    DOCKER_COMPOSE_CMD="docker-compose"
-fi
-
+DOCKER_COMPOSE_CMD=$(get_docker_compose_cmd)
 $DOCKER_COMPOSE_CMD down 2>/dev/null || true
 
 # Build and start containers
@@ -81,8 +85,8 @@ echo ""
 echo "Waiting for services to start..."
 sleep 5
 
-# Check if containers are running
-if $DOCKER_COMPOSE_CMD ps | grep -q -E "(Up|running)"; then
+# Check if containers are running (using -q for more reliable check)
+if [ -n "$($DOCKER_COMPOSE_CMD ps -q)" ]; then
     echo "✓ Containers are running"
 else
     echo "⚠ Warning: Containers may not have started correctly"

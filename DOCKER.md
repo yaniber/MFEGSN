@@ -90,8 +90,6 @@ git push
 
 ## 🔧 Commandes Utiles
 
-## 🔧 Commandes Utiles
-
 **Note** : Remplacez `docker compose` par `docker-compose` si vous utilisez Docker Compose v1.
 
 ### Voir les logs
