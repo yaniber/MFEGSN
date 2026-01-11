@@ -111,13 +111,12 @@ If you're using the Docker setup (recommended), the MCP server is already runnin
   "mcpServers": {
     "pdf-rag-server": {
       "command": "docker",
-      "args": ["exec", "-i", "pdf-rag-mcp", "python", "mcp_server/server.py"],
-      "env": {}
+      "args": ["exec", "-i", "pdf-rag-mcp", "python", "mcp_server/server.py"]
     }
   }
 }
 ```
-*Note: Le container `pdf-rag-mcp` doit être en cours d'exécution. Lancez `./start.sh` avant de démarrer VSCode. Vérifiez avec `docker compose ps`.*
+*Note: The `pdf-rag-mcp` container must be running. Launch `./start.sh` before starting VSCode. Verify with `docker compose ps`.*
 
 **Option B - Direct Python (for local installation):**
 ```json
@@ -125,8 +124,7 @@ If you're using the Docker setup (recommended), the MCP server is already runnin
   "mcpServers": {
     "pdf-rag-server": {
       "command": "python",
-      "args": ["/absolute/path/to/MFEGSN/mcp_server/server.py"],
-      "env": {}
+      "args": ["/absolute/path/to/MFEGSN/mcp_server/server.py"]
     }
   }
 }

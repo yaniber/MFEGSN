@@ -137,7 +137,7 @@ Le serveur MCP tourne déjà dans Docker ! Pour l'utiliser avec VSCode :
      }
    }
    ```
-   *Note: Le container `pdf-rag-mcp` doit être en cours d'exécution. Vérifiez avec `docker compose ps`.*
+   *Note: Le nom `pdf-rag-mcp` correspond au `container_name` défini dans docker-compose.yml. Si vous modifiez le nom du container, mettez à jour cette configuration. Vérifiez avec `docker compose ps`.*
 
 3. **Alternative** : Accéder aux outils via l'interface web (http://localhost:8000)
 
