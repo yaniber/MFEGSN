@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "pdf-rag-server": {
+      "command": "python",
+      "args": ["${workspaceFolder}/mcp_server/server.py"],
+      "env": {
+        "PYTHONPATH": "${workspaceFolder}"
+      }
+    }
+  }
+}
