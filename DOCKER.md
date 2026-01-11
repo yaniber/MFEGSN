@@ -14,6 +14,12 @@ Ce document explique comment utiliser Docker pour lancer rapidement l'applicatio
 - Docker (version 20.10+)
 - Docker Compose (version 2.0+ ou 1.27+)
 
+**Note sur Docker Compose** : Ce guide utilise la syntaxe moderne `docker compose` (v2), mais le script `start.sh` est compatible avec les deux versions :
+- Docker Compose v2 : `docker compose` (intégré à Docker Desktop)
+- Docker Compose v1 : `docker-compose` (installation séparée)
+
+Les commandes peuvent être utilisées de manière interchangeable selon votre installation.
+
 ### Installation de Docker
 
 - **Linux** : `curl -fsSL https://get.docker.com | sh`
@@ -83,6 +89,10 @@ git push
 **Note** : Par défaut, le `.gitignore` ignore les fichiers PDF et Markdown individuels pour éviter de gros commits. Si vous souhaitez les inclure, modifiez le `.gitignore`.
 
 ## 🔧 Commandes Utiles
+
+## 🔧 Commandes Utiles
+
+**Note** : Remplacez `docker compose` par `docker-compose` si vous utilisez Docker Compose v1.
 
 ### Voir les logs
 

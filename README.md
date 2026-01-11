@@ -49,12 +49,14 @@ C'est tout ! L'application sera accessible sur http://localhost:8000
 
 **Commandes utiles :**
 ```bash
-./start.sh           # Démarrer l'application
-./stop.sh            # Arrêter l'application
-docker-compose logs  # Voir les logs
+./start.sh                        # Démarrer l'application
+./stop.sh                         # Arrêter l'application
+docker compose logs               # Voir les logs (ou docker-compose logs)
 ```
 
 📖 **[Guide complet Docker](DOCKER.md)** pour plus de détails sur la configuration Docker, la persistance des données, et le dépannage.
+
+**Note** : Le script `start.sh` détecte automatiquement si vous utilisez Docker Compose v1 (`docker-compose`) ou v2 (`docker compose`).
 
 ### 💻 Option 2 : Installation locale
 
