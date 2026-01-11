@@ -103,12 +103,12 @@ Open your browser to: **http://localhost:8000**
 If you're using the Docker setup (recommended), the MCP server is already running!
 
 1. Install the MCP extension in VSCode
-2. Add the following to your VSCode settings (`.vscode/settings.json`):
+2. Add the following to your VSCode MCP configuration file (`.vscode/mcp.json`):
 
 **Option A - Via Docker exec (Recommended for Docker setup):**
 ```json
 {
-  "mcp.servers": {
+  "mcpServers": {
     "pdf-rag-server": {
       "command": "docker",
       "args": ["exec", "-i", "pdf-rag-mcp", "python", "mcp_server/server.py"],
@@ -117,12 +117,12 @@ If you're using the Docker setup (recommended), the MCP server is already runnin
   }
 }
 ```
-*Note: Le container est nommé `pdf-rag-mcp` (défini dans docker-compose.yml). Vous pouvez vérifier avec `docker compose ps`.*
+*Note: Le container `pdf-rag-mcp` doit être en cours d'exécution. Lancez `./start.sh` avant de démarrer VSCode. Vérifiez avec `docker compose ps`.*
 
 **Option B - Direct Python (for local installation):**
 ```json
 {
-  "mcp.servers": {
+  "mcpServers": {
     "pdf-rag-server": {
       "command": "python",
       "args": ["/absolute/path/to/MFEGSN/mcp_server/server.py"],

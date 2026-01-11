@@ -123,8 +123,10 @@ python mcp_server/server.py
 **Pour utiliser le serveur MCP avec VSCode**, vous avez deux options :
 
 ##### Option 1 : Avec Docker (Recommandé)
-Le serveur MCP tourne déjà dans Docker ! Pour l'utiliser avec VSCode, vous pouvez :
-1. **Méthode stdio** : Exécuter des commandes dans le container
+Le serveur MCP tourne déjà dans Docker ! Pour l'utiliser avec VSCode :
+
+1. Assurez-vous que les containers Docker sont démarrés (`./start.sh`)
+2. Ajoutez dans votre fichier `.vscode/mcp.json` :
    ```json
    {
      "mcpServers": {
@@ -135,12 +137,12 @@ Le serveur MCP tourne déjà dans Docker ! Pour l'utiliser avec VSCode, vous pou
      }
    }
    ```
-   *Note: Le container est nommé `pdf-rag-mcp` (défini dans docker-compose.yml). Vous pouvez vérifier avec `docker compose ps`.*
+   *Note: Le container `pdf-rag-mcp` doit être en cours d'exécution. Vérifiez avec `docker compose ps`.*
 
-2. **Méthode directe** : Accéder aux outils via l'interface web (http://localhost:8000)
+3. **Alternative** : Accéder aux outils via l'interface web (http://localhost:8000)
 
 ##### Option 2 : Installation locale (sans Docker)
-Ajouter dans votre configuration MCP VSCode (`.vscode/mcp_config.json` ou settings) :
+Ajouter dans votre fichier `.vscode/mcp.json` :
 
 ```json
 {
