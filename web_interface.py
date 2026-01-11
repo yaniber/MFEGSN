@@ -3,10 +3,10 @@ FastAPI Web Interface for PDF Upload and Management
 """
 import os
 from pathlib import Path
-from typing import List
+from typing import List, Optional
 import shutil
 
-from fastapi import FastAPI, File, UploadFile, HTTPException
+from fastapi import FastAPI, File, UploadFile, HTTPException, Form
 from fastapi.responses import HTMLResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 import sys
@@ -49,10 +49,41 @@ async def home():
             h1 {
                 color: #333;
             }
+            .header-buttons {
+                margin: 20px 0;
+                display: flex;
+                gap: 10px;
+                flex-wrap: wrap;
+            }
+            .colab-button {
+                display: inline-flex;
+                align-items: center;
+                background-color: #F9AB00;
+                color: white;
+                padding: 10px 20px;
+                border: none;
+                border-radius: 4px;
+                text-decoration: none;
+                font-size: 14px;
+                font-weight: bold;
+            }
+            .colab-button:hover {
+                background-color: #E69500;
+            }
+            .colab-button img {
+                height: 20px;
+                margin-right: 8px;
+            }
             .upload-section {
                 margin: 20px 0;
                 padding: 20px;
                 border: 2px dashed #ccc;
+                border-radius: 8px;
+            }
+            .gdrive-section {
+                margin: 20px 0;
+                padding: 20px;
+                background-color: #f9f9f9;
                 border-radius: 8px;
             }
             button {
@@ -66,6 +97,12 @@ async def home():
             }
             button:hover {
                 background-color: #45a049;
+            }
+            button.secondary {
+                background-color: #2196F3;
+            }
+            button.secondary:hover {
+                background-color: #0b7dda;
             }
             .query-section {
                 margin-top: 30px;
@@ -102,12 +139,32 @@ async def home():
                 background-color: #f8d7da;
                 color: #721c24;
             }
+            .info-box {
+                background-color: #e7f3ff;
+                padding: 15px;
+                border-radius: 4px;
+                margin: 20px 0;
+                border-left: 4px solid #2196F3;
+            }
         </style>
     </head>
     <body>
         <div class="container">
             <h1>📚 PDF RAG System</h1>
             <p>Upload PDFs, extract content, and query using semantic search</p>
+            
+            <div class="header-buttons">
+                <a href="https://colab.research.google.com/github/yaniber/MFEGSN/blob/main/MFEGSN_Colab.ipynb" 
+                   class="colab-button" target="_blank">
+                    <img src="https://colab.research.google.com/img/colab_favicon_256px.png" alt="Colab">
+                    Open in Google Colab
+                </a>
+            </div>
+            
+            <div class="info-box">
+                <strong>🚀 New!</strong> You can now run this application on Google Colab and import PDFs from Google Drive!
+                Click the button above to get started.
+            </div>
             
             <div class="upload-section">
                 <h2>Upload PDF</h2>
@@ -116,6 +173,18 @@ async def home():
                     <button type="submit">Upload & Extract</button>
                 </form>
                 <div id="uploadStatus"></div>
+            </div>
+            
+            <div class="gdrive-section">
+                <h2>📁 Import from Google Drive</h2>
+                <p>To import PDFs from Google Drive, use the <strong>Google Colab notebook</strong> (button above).</p>
+                <p>The notebook allows you to:</p>
+                <ul>
+                    <li>Mount your Google Drive</li>
+                    <li>Import PDFs directly from your Drive folders</li>
+                    <li>Process and index your documents</li>
+                    <li>Save outputs back to Drive or push to GitHub</li>
+                </ul>
             </div>
             
             <div class="query-section">

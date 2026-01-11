@@ -2,7 +2,23 @@
 
 ## 🚀 Getting Started in 5 Minutes
 
-### Option 1: Docker (Recommandé - Plus Rapide!)
+### Option 1: Google Colab (Le Plus Rapide - Aucune Installation!)
+
+**Démarrez immédiatement dans le cloud, avec import depuis Google Drive !**
+
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/yaniber/MFEGSN/blob/main/MFEGSN_Colab.ipynb)
+
+1. Cliquez sur le badge ci-dessus
+2. Exécutez les cellules du notebook
+3. Importez vos PDFs depuis Google Drive ou uploadez-les
+4. Traitez et interrogez vos documents
+5. Sauvegardez vers Drive ou GitHub
+
+📖 **[Guide complet Google Colab](COLAB.md)** avec instructions détaillées pour sauvegarder vers GitHub.
+
+---
+
+### Option 2: Docker (Recommandé pour usage local)
 
 **Avec Docker, l'application web ET le serveur MCP sont lancés automatiquement !**
 
@@ -52,7 +68,7 @@ git push
 
 ---
 
-### Option 2: Installation Locale
+### Option 3: Installation Locale
 
 #### 1. Installation
 
