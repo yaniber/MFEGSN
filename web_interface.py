@@ -607,12 +607,12 @@ async def update_config(
     """Update configuration (in-memory only, not persisted)"""
     global NGROK_AUTHTOKEN, GOOGLE_DRIVE_API_KEY, GITHUB_PAT
     
-    if ngrok_authtoken is not None:
-        NGROK_AUTHTOKEN = ngrok_authtoken
-    if google_drive_api_key is not None:
-        GOOGLE_DRIVE_API_KEY = google_drive_api_key
-    if github_pat is not None:
-        GITHUB_PAT = github_pat
+    if ngrok_authtoken is not None and ngrok_authtoken.strip():
+        NGROK_AUTHTOKEN = ngrok_authtoken.strip()
+    if google_drive_api_key is not None and google_drive_api_key.strip():
+        GOOGLE_DRIVE_API_KEY = google_drive_api_key.strip()
+    if github_pat is not None and github_pat.strip():
+        GITHUB_PAT = github_pat.strip()
     
     return {
         "status": "success",
@@ -666,5 +666,6 @@ if __name__ == "__main__":
         if ngrok_tunnel:
             try:
                 ngrok.disconnect(ngrok_tunnel.public_url)
-            except:
+            except Exception:
+                # Ignore errors during cleanup
                 pass
