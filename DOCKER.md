@@ -140,12 +140,11 @@ docker compose exec pdf-rag-mcp bash
 # Arrêter et supprimer les containers
 docker compose down
 
-# Supprimer aussi les volumes (ATTENTION : perte de données si non sauvegardées)
-docker compose down -v
-
 # Supprimer les images
 docker compose down --rmi all
 ```
+
+**Note sur les volumes** : Ce projet utilise des bind mounts (pas des volumes Docker). Vos données dans `./pdfs`, `./markdown_outputs` et `./chroma_db` sont toujours stockées dans votre repository local et ne seront pas supprimées par `docker compose down`. Pour supprimer les données, vous devez manuellement effacer les fichiers dans ces dossiers.
 
 ## 🏗️ Architecture Docker
 
