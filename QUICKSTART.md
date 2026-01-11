@@ -2,7 +2,53 @@
 
 ## 🚀 Getting Started in 5 Minutes
 
-### 1. Installation
+### Option 1: Docker (Recommandé - Plus Rapide!)
+
+#### 1. Prérequis
+- Docker installé ([Installation Docker](https://docs.docker.com/get-docker/))
+- Docker Compose installé ([Installation Docker Compose](https://docs.docker.com/compose/install/))
+
+#### 2. Lancement
+
+```bash
+# Clone the repository
+git clone https://github.com/yaniber/MFEGSN.git
+cd MFEGSN
+
+# Start with Docker
+chmod +x start.sh
+./start.sh
+```
+
+Ouvrez votre navigateur : **http://localhost:8000**
+
+#### 3. Arrêter l'application
+
+```bash
+./stop.sh
+```
+
+#### 4. Persistance des données
+
+Toutes les données sont automatiquement sauvegardées dans votre repository grâce aux bind mounts :
+- `./pdfs` - Vos fichiers PDF uploadés
+- `./markdown_outputs` - Les fichiers Markdown générés
+- `./chroma_db` - La base de données vectorielle
+
+Pour sauvegarder vos données :
+```bash
+git add pdfs markdown_outputs chroma_db
+git commit -m "Mise à jour des données"
+git push
+```
+
+**Note :** Les fichiers `.pdf`, `.md` et le contenu de `chroma_db` sont ignorés par défaut dans `.gitignore` pour éviter de commiter des fichiers volumineux. Modifiez `.gitignore` si vous souhaitez les inclure.
+
+---
+
+### Option 2: Installation Locale
+
+#### 1. Installation
 
 ```bash
 # Clone the repository

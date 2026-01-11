@@ -38,7 +38,9 @@ env/
 Thumbs.db
 
 # Application specific
-chroma_db/
+chroma_db/*
+!chroma_db/.gitkeep
+!chroma_db/README.md
 pdfs/*.pdf
 markdown_outputs/*.md
 !markdown_outputs/README.md

@@ -13,10 +13,48 @@ Système complet pour l'extraction de contenu PDF et recherche sémantique (RAG)
 
 ## 📋 Prérequis
 
+### Option 1 : Docker (Recommandé)
+- Docker
+- Docker Compose
+
+### Option 2 : Installation locale
 - Python 3.8+
 - pip
 
 ## 🔧 Installation
+
+### 🐳 Option 1 : Avec Docker (Démarrage Rapide)
+
+**C'est la méthode la plus simple !** Tout est configuré automatiquement avec persistance des données.
+
+1. Cloner le repository :
+```bash
+git clone https://github.com/yaniber/MFEGSN.git
+cd MFEGSN
+```
+
+2. Lancer l'application avec le script de démarrage rapide :
+```bash
+chmod +x start.sh
+./start.sh
+```
+
+C'est tout ! L'application sera accessible sur http://localhost:8000
+
+**Avantages :**
+- ✅ Aucune installation de dépendances Python nécessaire
+- ✅ Persistance automatique des données (bind mounts)
+- ✅ Les données sont sauvegardées dans le repository (git push)
+- ✅ Environnement isolé et reproductible
+
+**Commandes utiles :**
+```bash
+./start.sh           # Démarrer l'application
+./stop.sh            # Arrêter l'application
+docker-compose logs  # Voir les logs
+```
+
+### 💻 Option 2 : Installation locale
 
 1. Cloner le repository :
 ```bash
