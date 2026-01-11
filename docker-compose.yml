@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  pdf-rag-web:
+    build: .
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./pdfs:/app/pdfs
+      - ./markdown_outputs:/app/markdown_outputs
+      - ./chroma_db:/app/chroma_db
+    environment:
+      - PDF_DIR=pdfs
+      - MARKDOWN_OUTPUT_DIR=markdown_outputs
+      - CHROMA_DB_DIR=./chroma_db
+    restart: unless-stopped
+
+  pdf-rag-mcp:
+    build: .
+    command: python mcp_server/server.py
+    volumes:
+      - ./pdfs:/app/pdfs
+      - ./markdown_outputs:/app/markdown_outputs
+      - ./chroma_db:/app/chroma_db
+    stdin_open: true
+    tty: true
+    restart: unless-stopped
