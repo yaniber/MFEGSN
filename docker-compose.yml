@@ -1,3 +1,10 @@
+# Docker Compose configuration for MFEGSN PDF RAG System
+# Requires: Docker Compose v2.0+
+# 
+# Services:
+#   - pdf-rag-web: Web interface (port 8000)
+#   - pdf-rag-mcp: MCP server (background, stdio)
+
 services:
   pdf-rag-web:
     build: .
