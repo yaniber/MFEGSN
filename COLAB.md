@@ -27,6 +27,8 @@ Ces configurations sont **optionnelles** mais recommandées pour une expérience
 
 ## 📤 Importer des PDFs depuis Google Drive
 
+Le notebook offre maintenant **deux méthodes** pour importer vos PDFs depuis Google Drive :
+
 ### Étape 1 : Monter Google Drive
 
 ```python
@@ -36,23 +38,67 @@ drive.mount('/content/drive')
 
 Cela vous demandera d'autoriser l'accès à votre Drive.
 
-### Étape 2 : Configurer le chemin vers vos PDFs
+### Méthode A : Import depuis Plusieurs Dossiers
+
+**Idéal pour** : Importer tous les PDFs de plusieurs dossiers à la fois
 
 ```python
-# Modifiez ce chemin selon l'emplacement de vos PDFs dans Drive
-GDRIVE_PDF_FOLDER = "/content/drive/MyDrive/PDFs"
+# Ajoutez autant de dossiers que nécessaire
+GDRIVE_PDF_FOLDERS = [
+    "/content/drive/MyDrive/PDFs",
+    "/content/drive/MyDrive/Documents",
+    "/content/drive/MyDrive/Research",
+    "/content/drive/Shareddrives/TeamFolder",
+]
 ```
 
-**Comment trouver le bon chemin ?**
+**Avantages** :
+- ✅ Importe depuis plusieurs dossiers en une seule fois
+- ✅ Gère automatiquement les doublons de noms
+- ✅ Affiche le nombre de PDFs trouvés par dossier
+
+**Comment trouver les chemins ?**
 
 1. Ouvrez votre Google Drive dans votre navigateur
 2. Naviguez vers le dossier contenant vos PDFs
-3. Le chemin sera de la forme : `/content/drive/MyDrive/NomDuDossier`
-4. Pour un dossier partagé : `/content/drive/Shareddrives/NomDuDossier`
+3. Le chemin sera de la forme :
+   - Dossier personnel : `/content/drive/MyDrive/NomDuDossier`
+   - Dossier partagé : `/content/drive/Shareddrives/NomDuDossier`
 
-### Étape 3 : Importer les PDFs
+### Méthode B : Sélection Interactive
 
-Le notebook copiera automatiquement tous les fichiers PDF du dossier spécifié vers le répertoire de travail Colab.
+**Idéal pour** : Choisir des fichiers spécifiques depuis n'importe quel dossier
+
+Cette méthode vous permet de :
+1. Parcourir différents dossiers un par un
+2. Voir la liste des PDFs disponibles dans chaque dossier
+3. Sélectionner uniquement les fichiers dont vous avez besoin
+4. Répéter pour autant de dossiers que nécessaire
+
+**Exemple d'utilisation** :
+```
+Enter folder path: /content/drive/MyDrive/Research
+Found 5 PDF(s) in folder:
+   1. paper1.pdf
+   2. paper2.pdf
+   3. paper3.pdf
+   4. paper4.pdf
+   5. paper5.pdf
+
+Enter file numbers to import (e.g., '1,3,5' or 'all'): 1,3,5
+```
+
+**Avantages** :
+- ✅ Contrôle total sur les fichiers importés
+- ✅ Parcourir plusieurs dossiers différents
+- ✅ Sélection fichier par fichier
+- ✅ Voir les noms avant d'importer
+
+### Gestion des Doublons
+
+Si plusieurs fichiers ont le même nom, le système ajoute automatiquement le nom du dossier source :
+- `document.pdf` → reste `document.pdf`
+- Doublon depuis `/Research` → devient `Research_document.pdf`
 
 ## 💾 Sauvegarder les Outputs
 
