@@ -130,12 +130,12 @@ Le serveur MCP tourne déjà dans Docker ! Pour l'utiliser avec VSCode, vous pou
      "mcpServers": {
        "pdf-rag-server": {
          "command": "docker",
-         "args": ["exec", "-i", "mfegsn-pdf-rag-mcp-1", "python", "mcp_server/server.py"]
+         "args": ["exec", "-i", "pdf-rag-mcp", "python", "mcp_server/server.py"]
        }
      }
    }
    ```
-   *Note: Le nom du container peut varier. Vérifiez avec `docker compose ps`*
+   *Note: Le nom par défaut du service est `pdf-rag-mcp`. Si cela ne fonctionne pas, trouvez le nom exact avec `docker compose ps` et remplacez-le dans la configuration.*
 
 2. **Méthode directe** : Accéder aux outils via l'interface web (http://localhost:8000)
 

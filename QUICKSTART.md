@@ -111,13 +111,13 @@ If you're using the Docker setup (recommended), the MCP server is already runnin
   "mcp.servers": {
     "pdf-rag-server": {
       "command": "docker",
-      "args": ["exec", "-i", "mfegsn-pdf-rag-mcp-1", "python", "mcp_server/server.py"],
+      "args": ["exec", "-i", "pdf-rag-mcp", "python", "mcp_server/server.py"],
       "env": {}
     }
   }
 }
 ```
-*Note: Check the exact container name with `docker compose ps`*
+*Note: Le nom par défaut du service est `pdf-rag-mcp`. Si cela ne fonctionne pas, trouvez le nom exact avec `docker compose ps` et remplacez-le dans la configuration.*
 
 **Option B - Direct Python (for local installation):**
 ```json

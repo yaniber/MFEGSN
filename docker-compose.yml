@@ -10,7 +10,7 @@ services:
     environment:
       - PDF_DIR=pdfs
       - MARKDOWN_OUTPUT_DIR=markdown_outputs
-      - CHROMA_DB_DIR=./chroma_db
+      - CHROMA_DB_DIR=chroma_db
     restart: unless-stopped
 
   pdf-rag-mcp:
@@ -23,7 +23,7 @@ services:
     environment:
       - PDF_DIR=pdfs
       - MARKDOWN_OUTPUT_DIR=markdown_outputs
-      - CHROMA_DB_DIR=./chroma_db
+      - CHROMA_DB_DIR=chroma_db
     stdin_open: true
     tty: true
     restart: unless-stopped
