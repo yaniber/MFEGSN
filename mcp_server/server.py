@@ -14,8 +14,8 @@ from mcp.server import Server
 from mcp.types import Tool, TextContent
 import mcp.server.stdio
 
-from pdf_extractor.extractor import PDFExtractor
-from rag_indexer.indexer import RAGIndexer
+from src.pdf_extractor.extractor import PDFExtractor
+from src.rag_indexer.indexer import RAGIndexer
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)

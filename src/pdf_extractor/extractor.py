@@ -7,6 +7,12 @@ from pathlib import Path
 from typing import Dict, List, Optional
 import logging
 
+try:
+    import fitz  # PyMuPDF
+    PYMUPDF_AVAILABLE = True
+except ImportError:
+    PYMUPDF_AVAILABLE = False
+
 logger = logging.getLogger(__name__)
 
 
@@ -84,7 +90,8 @@ class PDFExtractor:
     
     def _extract_with_pymupdf(self, pdf_file: Path) -> Dict[str, any]:
         """Fallback extraction using PyMuPDF"""
-        import fitz  # PyMuPDF
+        if not PYMUPDF_AVAILABLE:
+            raise ImportError("PyMuPDF is not installed. Install it with: pip install PyMuPDF")
         
         doc = fitz.open(pdf_file)
         full_text = ""

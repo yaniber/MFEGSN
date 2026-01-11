@@ -124,6 +124,12 @@ def test_rag_indexer():
             
             return True
             
+    except ImportError as e:
+        print(f"⚠ Skipping RAG indexer test: {e}")
+        return None
+    except AssertionError as e:
+        print(f"✗ Assertion failed in RAG indexer test: {e}")
+        return False
     except Exception as e:
         print(f"✗ Error testing RAG indexer: {e}")
         import traceback
@@ -170,6 +176,12 @@ def test_integration():
                 print("⚠ No test PDF available, skipping integration test")
                 return None
                 
+    except ImportError as e:
+        print(f"⚠ Skipping integration test: {e}")
+        return None
+    except FileNotFoundError as e:
+        print(f"✗ File error in integration test: {e}")
+        return False
     except Exception as e:
         print(f"✗ Error in integration test: {e}")
         import traceback

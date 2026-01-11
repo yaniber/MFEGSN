@@ -6,6 +6,13 @@ from pathlib import Path
 from typing import List, Dict, Optional
 import logging
 
+try:
+    import chromadb
+    from chromadb.config import Settings
+    CHROMADB_AVAILABLE = True
+except ImportError:
+    CHROMADB_AVAILABLE = False
+
 logger = logging.getLogger(__name__)
 
 
@@ -13,15 +20,15 @@ class RAGIndexer:
     """Index and query documents using vector embeddings"""
     
     def __init__(self, persist_directory: str = "./chroma_db"):
+        if not CHROMADB_AVAILABLE:
+            raise ImportError("ChromaDB is not installed. Install it with: pip install chromadb")
+        
         self.persist_directory = persist_directory
         self.collection_name = "pdf_documents"
         self._initialize_db()
     
     def _initialize_db(self):
         """Initialize the vector database"""
-        import chromadb
-        from chromadb.config import Settings
-        
         self.client = chromadb.Client(Settings(
             persist_directory=self.persist_directory,
             anonymized_telemetry=False
@@ -31,7 +38,8 @@ class RAGIndexer:
         try:
             self.collection = self.client.get_collection(name=self.collection_name)
             logger.info(f"Loaded existing collection: {self.collection_name}")
-        except:
+        except ValueError:
+            # Collection doesn't exist, create it
             self.collection = self.client.create_collection(
                 name=self.collection_name,
                 metadata={"description": "PDF documents collection"}
