@@ -7,6 +7,7 @@
 
 services:
   pdf-rag-web:
+    container_name: pdf-rag-web
     build: .
     ports:
       - "8000:8000"
@@ -21,6 +22,7 @@ services:
     restart: unless-stopped
 
   pdf-rag-mcp:
+    container_name: pdf-rag-mcp
     build: .
     command: python mcp_server/server.py
     volumes:
