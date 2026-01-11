@@ -14,6 +14,18 @@ Système complet pour l'extraction de contenu PDF et recherche sémantique (RAG)
 - **Serveur MCP** : Serveur Model Context Protocol pour intégration VSCode
 - **Recherche sémantique** : Requêtes intelligentes sur les documents indexés
 - **Google Colab** : Exécutez l'application dans le cloud sans installation locale
+- **Ngrok Support** : Exposez votre application locale avec une URL publique
+- **Configuration API** : Support pour Google Drive API, GitHub PAT, et Ngrok
+
+## ⚙️ Configuration Optionnelle
+
+MFEGSN supporte plusieurs API keys optionnelles pour des fonctionnalités avancées :
+
+- **🌐 Ngrok** : Créez une URL publique pour votre serveur local ([Guide](API_KEYS.md#-ngrok-configuration))
+- **📁 Google Drive API** : Accès programmatique à Google Drive ([Guide](API_KEYS.md#-google-drive-api-key))
+- **🔑 GitHub PAT** : Push automatique vers GitHub depuis Colab ([Guide](API_KEYS.md#-github-personal-access-token-pat))
+
+📖 **[Guide complet de configuration des API keys](API_KEYS.md)**
 
 ## 📋 Prérequis
 

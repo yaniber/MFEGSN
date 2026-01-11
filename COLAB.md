@@ -11,6 +11,19 @@ Ce guide explique comment utiliser MFEGSN sur Google Colab pour importer des PDF
 - **Google Drive** : Import et export faciles
 - **Partage** : Partagez facilement vos notebooks
 - **Persistance** : Sauvegardez vos résultats facilement
+- **API Keys** : Configuration sécurisée des clés API (Google Drive, GitHub, Ngrok)
+
+## ⚙️ Configuration des API Keys (Optionnel)
+
+Le notebook inclut maintenant une cellule pour configurer vos API keys de manière sécurisée :
+
+- **Google Drive API Key** : Pour accès programmatique à Drive
+- **GitHub Personal Access Token** : Pour push automatique vers GitHub
+- **Ngrok Authtoken** : Pour URL publique (si vous lancez l'interface web)
+
+📖 **[Guide complet de configuration des API keys](API_KEYS.md)**
+
+Ces configurations sont **optionnelles** mais recommandées pour une expérience optimale.
 
 ## 📤 Importer des PDFs depuis Google Drive
 

@@ -5,11 +5,15 @@ import os
 from pathlib import Path
 from typing import List, Optional
 import shutil
+from dotenv import load_dotenv
 
 from fastapi import FastAPI, File, UploadFile, HTTPException, Form
 from fastapi.responses import HTMLResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 import sys
+
+# Load environment variables
+load_dotenv()
 
 # Add parent directory to path
 sys.path.insert(0, str(Path(__file__).parent.parent))
@@ -22,6 +26,11 @@ app = FastAPI(title="PDF RAG System", description="Upload, extract, and query PD
 # Initialize components
 pdf_extractor = PDFExtractor()
 rag_indexer = RAGIndexer()
+
+# Configuration
+NGROK_AUTHTOKEN = os.getenv("NGROK_AUTHTOKEN", "")
+GOOGLE_DRIVE_API_KEY = os.getenv("GOOGLE_DRIVE_API_KEY", "")
+GITHUB_PAT = os.getenv("GITHUB_PAT", "")
 
 
 @app.get("/", response_class=HTMLResponse)
@@ -146,6 +155,62 @@ async def home():
                 margin: 20px 0;
                 border-left: 4px solid #2196F3;
             }
+            .config-section {
+                margin: 20px 0;
+                padding: 20px;
+                background-color: #fff9e6;
+                border-radius: 8px;
+                border-left: 4px solid #ffc107;
+            }
+            .config-item {
+                margin: 15px 0;
+            }
+            .config-item label {
+                display: block;
+                font-weight: bold;
+                margin-bottom: 5px;
+            }
+            .config-item input[type="password"],
+            .config-item input[type="text"] {
+                width: 100%;
+                max-width: 500px;
+                padding: 8px;
+                border: 1px solid #ddd;
+                border-radius: 4px;
+            }
+            .config-item small {
+                display: block;
+                color: #666;
+                margin-top: 3px;
+            }
+            .config-status {
+                display: inline-block;
+                padding: 3px 8px;
+                border-radius: 3px;
+                font-size: 12px;
+                margin-left: 10px;
+            }
+            .config-status.configured {
+                background-color: #d4edda;
+                color: #155724;
+            }
+            .config-status.not-configured {
+                background-color: #f8d7da;
+                color: #721c24;
+            }
+            details {
+                margin: 20px 0;
+            }
+            summary {
+                cursor: pointer;
+                font-weight: bold;
+                padding: 10px;
+                background-color: #f0f0f0;
+                border-radius: 4px;
+            }
+            summary:hover {
+                background-color: #e0e0e0;
+            }
         </style>
     </head>
     <body>
@@ -165,6 +230,49 @@ async def home():
                 <strong>🚀 New!</strong> You can now run this application on Google Colab and import PDFs from Google Drive!
                 Click the button above to get started.
             </div>
+            
+            <details>
+                <summary>⚙️ Configuration (Optional)</summary>
+                <div class="config-section">
+                    <p><strong>Configure API keys and tokens to enable additional features:</strong></p>
+                    
+                    <div class="config-item">
+                        <label>
+                            🌐 Ngrok Authtoken 
+                            <span class="config-status" id="ngrokStatus">Not Configured</span>
+                        </label>
+                        <input type="password" id="ngrokAuthtoken" placeholder="Enter your ngrok authtoken">
+                        <small>Get your token from <a href="https://dashboard.ngrok.com/get-started/your-authtoken" target="_blank">ngrok dashboard</a>. This allows public access to your local server.</small>
+                    </div>
+                    
+                    <div class="config-item">
+                        <label>
+                            📁 Google Drive API Key 
+                            <span class="config-status" id="gdriveStatus">Not Configured</span>
+                        </label>
+                        <input type="password" id="googleDriveApiKey" placeholder="Enter your Google Drive API key">
+                        <small>Follow <a href="https://developers.google.com/drive/api/v3/quickstart/python" target="_blank">Google Drive API quickstart</a> to get your API key.</small>
+                    </div>
+                    
+                    <div class="config-item">
+                        <label>
+                            🔑 GitHub Personal Access Token (PAT) 
+                            <span class="config-status" id="githubStatus">Not Configured</span>
+                        </label>
+                        <input type="password" id="githubPat" placeholder="Enter your GitHub PAT">
+                        <small>Create token at <a href="https://github.com/settings/tokens" target="_blank">GitHub settings</a>. Required scopes: <code>repo</code></small>
+                    </div>
+                    
+                    <button onclick="saveConfiguration()" class="secondary">Save Configuration</button>
+                    <button onclick="loadConfiguration()">Check Status</button>
+                    <div id="configStatus"></div>
+                    
+                    <div style="margin-top: 15px; padding: 10px; background-color: #fff3cd; border-radius: 4px; border-left: 3px solid #ffc107;">
+                        <strong>⚠️ Note:</strong> Configuration is stored in-memory only and will be lost when the server restarts. 
+                        For persistent configuration, add these values to your <code>.env</code> file.
+                    </div>
+                </div>
+            </details>
             
             <div class="upload-section">
                 <h2>Upload PDF</h2>
@@ -315,6 +423,81 @@ async def home():
                     resultsDiv.innerHTML = `<div class="status error">Error: ${error.message}</div>`;
                 }
             }
+            
+            // Configuration management
+            async function loadConfiguration() {
+                try {
+                    const response = await fetch('/api/config');
+                    const config = await response.json();
+                    
+                    // Update status indicators
+                    updateStatusIndicator('ngrokStatus', config.ngrok_configured);
+                    updateStatusIndicator('gdriveStatus', config.google_drive_configured);
+                    updateStatusIndicator('githubStatus', config.github_configured);
+                    
+                    document.getElementById('configStatus').innerHTML = 
+                        '<div class="status success">Configuration status loaded</div>';
+                } catch (error) {
+                    document.getElementById('configStatus').innerHTML = 
+                        `<div class="status error">Error loading config: ${error.message}</div>`;
+                }
+            }
+            
+            function updateStatusIndicator(elementId, isConfigured) {
+                const element = document.getElementById(elementId);
+                if (isConfigured) {
+                    element.textContent = '✓ Configured';
+                    element.className = 'config-status configured';
+                } else {
+                    element.textContent = '✗ Not Configured';
+                    element.className = 'config-status not-configured';
+                }
+            }
+            
+            async function saveConfiguration() {
+                const statusDiv = document.getElementById('configStatus');
+                statusDiv.innerHTML = '<div class="status">Saving configuration...</div>';
+                
+                const formData = new FormData();
+                
+                const ngrokToken = document.getElementById('ngrokAuthtoken').value;
+                const gdriveKey = document.getElementById('googleDriveApiKey').value;
+                const githubPat = document.getElementById('githubPat').value;
+                
+                if (ngrokToken) formData.append('ngrok_authtoken', ngrokToken);
+                if (gdriveKey) formData.append('google_drive_api_key', gdriveKey);
+                if (githubPat) formData.append('github_pat', githubPat);
+                
+                try {
+                    const response = await fetch('/api/config', {
+                        method: 'POST',
+                        body: formData
+                    });
+                    
+                    const result = await response.json();
+                    
+                    if (response.ok) {
+                        statusDiv.innerHTML = `<div class="status success">${result.message}</div>`;
+                        
+                        // Update status indicators
+                        updateStatusIndicator('ngrokStatus', result.config.ngrok_configured);
+                        updateStatusIndicator('gdriveStatus', result.config.google_drive_configured);
+                        updateStatusIndicator('githubStatus', result.config.github_configured);
+                        
+                        // Clear input fields
+                        document.getElementById('ngrokAuthtoken').value = '';
+                        document.getElementById('googleDriveApiKey').value = '';
+                        document.getElementById('githubPat').value = '';
+                    } else {
+                        statusDiv.innerHTML = `<div class="status error">Error: ${result.detail}</div>`;
+                    }
+                } catch (error) {
+                    statusDiv.innerHTML = `<div class="status error">Error: ${error.message}</div>`;
+                }
+            }
+            
+            // Load configuration on page load
+            window.addEventListener('load', loadConfiguration);
         </script>
     </body>
     </html>
@@ -405,6 +588,83 @@ async def delete_document(doc_id: str):
         raise HTTPException(status_code=500, detail=str(e))
 
 
+@app.get("/api/config")
+async def get_config():
+    """Get current configuration status"""
+    return {
+        "ngrok_configured": bool(NGROK_AUTHTOKEN),
+        "google_drive_configured": bool(GOOGLE_DRIVE_API_KEY),
+        "github_configured": bool(GITHUB_PAT),
+    }
+
+
+@app.post("/api/config")
+async def update_config(
+    ngrok_authtoken: Optional[str] = Form(None),
+    google_drive_api_key: Optional[str] = Form(None),
+    github_pat: Optional[str] = Form(None)
+):
+    """Update configuration (in-memory only, not persisted)"""
+    global NGROK_AUTHTOKEN, GOOGLE_DRIVE_API_KEY, GITHUB_PAT
+    
+    if ngrok_authtoken is not None:
+        NGROK_AUTHTOKEN = ngrok_authtoken
+    if google_drive_api_key is not None:
+        GOOGLE_DRIVE_API_KEY = google_drive_api_key
+    if github_pat is not None:
+        GITHUB_PAT = github_pat
+    
+    return {
+        "status": "success",
+        "message": "Configuration updated (in-memory only)",
+        "config": {
+            "ngrok_configured": bool(NGROK_AUTHTOKEN),
+            "google_drive_configured": bool(GOOGLE_DRIVE_API_KEY),
+            "github_configured": bool(GITHUB_PAT),
+        }
+    }
+
+
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    
+    # Check if ngrok should be used
+    use_ngrok = os.getenv("USE_NGROK", "false").lower() == "true" or NGROK_AUTHTOKEN
+    ngrok_tunnel = None
+    
+    if use_ngrok and NGROK_AUTHTOKEN:
+        try:
+            from pyngrok import ngrok, conf
+            
+            # Set authtoken
+            conf.get_default().auth_token = NGROK_AUTHTOKEN
+            
+            # Start ngrok tunnel
+            port = int(os.getenv("WEB_PORT", "8000"))
+            ngrok_tunnel = ngrok.connect(port, bind_tls=True)
+            public_url = ngrok_tunnel.public_url
+            
+            print("\n" + "="*60)
+            print("🌐 NGROK TUNNEL ACTIVE")
+            print("="*60)
+            print(f"Public URL: {public_url}")
+            print(f"Local URL:  http://localhost:{port}")
+            print("="*60 + "\n")
+        except ImportError:
+            print("⚠️  pyngrok not installed. Install with: pip install pyngrok")
+            print("    Falling back to local mode only.\n")
+        except Exception as e:
+            print(f"⚠️  Failed to start ngrok tunnel: {e}")
+            print("    Falling back to local mode only.\n")
+    
+    # Start uvicorn
+    port = int(os.getenv("WEB_PORT", "8000"))
+    try:
+        uvicorn.run(app, host="0.0.0.0", port=port)
+    finally:
+        # Close ngrok tunnel on exit
+        if ngrok_tunnel:
+            try:
+                ngrok.disconnect(ngrok_tunnel.public_url)
+            except:
+                pass
