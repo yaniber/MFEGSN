@@ -54,6 +54,8 @@ C'est tout ! L'application sera accessible sur http://localhost:8000
 docker-compose logs  # Voir les logs
 ```
 
+📖 **[Guide complet Docker](DOCKER.md)** pour plus de détails sur la configuration Docker, la persistance des données, et le dépannage.
+
 ### 💻 Option 2 : Installation locale
 
 1. Cloner le repository :
