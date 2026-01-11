@@ -41,6 +41,10 @@ chmod +x start.sh
 
 C'est tout ! L'application sera accessible sur http://localhost:8000
 
+**Le script lance automatiquement deux services Docker :**
+- 🌐 **Interface Web** : http://localhost:8000 (upload de PDFs, recherche)
+- 🔧 **Serveur MCP** : Tourne en arrière-plan pour intégration VSCode/Roo Code
+
 **Avantages :**
 - ✅ Aucune installation de dépendances Python nécessaire
 - ✅ Persistance automatique des données (bind mounts)
@@ -106,12 +110,15 @@ Fonctionnalités de l'interface :
 
 Le serveur MCP permet l'intégration avec VSCode Copilot et Roo Code.
 
-1. Lancer le serveur MCP :
+**Avec Docker (Recommandé)** : Le serveur MCP est **automatiquement lancé** en arrière-plan quand vous utilisez `./start.sh`. Aucune action supplémentaire nécessaire !
+
+**Sans Docker (Installation locale)** :
+1. Lancer le serveur MCP manuellement :
 ```bash
 python mcp_server/server.py
 ```
 
-2. Configuration VSCode :
+#### Configuration VSCode
 
 Ajouter dans votre configuration MCP VSCode (`.vscode/mcp_config.json` ou settings) :
 

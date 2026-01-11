@@ -4,6 +4,8 @@
 
 ### Option 1: Docker (Recommandé - Plus Rapide!)
 
+**Avec Docker, l'application web ET le serveur MCP sont lancés automatiquement !**
+
 #### 1. Prérequis
 - Docker installé ([Installation Docker](https://docs.docker.com/get-docker/))
 - Docker Compose installé ([Installation Docker Compose](https://docs.docker.com/compose/install/))
@@ -21,6 +23,10 @@ chmod +x start.sh
 ```
 
 Ouvrez votre navigateur : **http://localhost:8000**
+
+**✅ Deux services Docker sont maintenant en cours d'exécution :**
+- 🌐 **Interface Web** : http://localhost:8000 (upload, recherche de documents)
+- 🔧 **Serveur MCP** : Arrière-plan (intégration VSCode Copilot/Roo Code)
 
 #### 3. Arrêter l'application
 
