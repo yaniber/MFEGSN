@@ -98,11 +98,28 @@ Open your browser to: **http://localhost:8000**
 
 ## 🔌 VSCode Integration with MCP
 
-### Setup MCP in VSCode
+### Setup MCP in VSCode (Docker Version)
+
+If you're using the Docker setup (recommended), the MCP server is already running!
 
 1. Install the MCP extension in VSCode
 2. Add the following to your VSCode settings (`.vscode/settings.json`):
 
+**Option A - Via Docker exec (Recommended for Docker setup):**
+```json
+{
+  "mcp.servers": {
+    "pdf-rag-server": {
+      "command": "docker",
+      "args": ["exec", "-i", "mfegsn-pdf-rag-mcp-1", "python", "mcp_server/server.py"],
+      "env": {}
+    }
+  }
+}
+```
+*Note: Check the exact container name with `docker compose ps`*
+
+**Option B - Direct Python (for local installation):**
 ```json
 {
   "mcp.servers": {

@@ -104,6 +104,9 @@ docker compose logs -f
 # Un container spécifique
 docker compose logs pdf-rag-web
 docker compose logs pdf-rag-mcp
+
+# Suivi en temps réel du serveur MCP uniquement (utile pour le debugging)
+docker compose logs -f pdf-rag-mcp
 ```
 
 ### Vérifier l'état des containers
