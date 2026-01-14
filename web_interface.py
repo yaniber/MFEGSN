@@ -9,11 +9,16 @@ from dotenv import load_dotenv
 import json
 from datetime import datetime
 import base64
+import logging
 
 from fastapi import FastAPI, File, UploadFile, HTTPException, Form, BackgroundTasks
 from fastapi.responses import HTMLResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 import sys
+
+# Configure logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 # Load environment variables
 load_dotenv()
@@ -998,6 +1003,10 @@ async def list_pdfs():
 
 # Global variable to track processing status
 processing_status = {}
+processing_status_lock = __import__('threading').Lock()
+
+# Constants for GitHub operations
+MAX_FILES_PER_GITHUB_COMMIT = 50  # GitHub API limit for files per request
 
 
 @app.post("/api/process-pdfs")
@@ -1014,15 +1023,16 @@ async def process_selected_pdfs(
     if not pdf_list:
         raise HTTPException(status_code=400, detail="No PDFs selected")
     
-    # Initialize processing status
-    processing_status[task_id] = {
-        "status": "starting",
-        "total": len(pdf_list),
-        "processed": 0,
-        "current": None,
-        "results": [],
-        "errors": []
-    }
+    # Initialize processing status (thread-safe)
+    with processing_status_lock:
+        processing_status[task_id] = {
+            "status": "starting",
+            "total": len(pdf_list),
+            "processed": 0,
+            "current": None,
+            "results": [],
+            "errors": []
+        }
     
     # Start background processing
     background_tasks.add_task(process_pdfs_background, task_id, pdf_list)
@@ -1032,18 +1042,24 @@ async def process_selected_pdfs(
 
 def process_pdfs_background(task_id: str, pdf_names: List[str]):
     """Background task to process PDFs"""
-    processing_status[task_id]["status"] = "processing"
+    import logging
+    
+    logger = logging.getLogger(__name__)
+    
+    with processing_status_lock:
+        processing_status[task_id]["status"] = "processing"
     
     for idx, pdf_name in enumerate(pdf_names):
         try:
-            processing_status[task_id]["current"] = pdf_name
+            with processing_status_lock:
+                processing_status[task_id]["current"] = pdf_name
             
             pdf_path = Path("pdfs") / pdf_name
             if not pdf_path.exists():
-                processing_status[task_id]["errors"].append({
-                    "pdf": pdf_name,
-                    "error": "File not found"
-                })
+                error_info = {"pdf": pdf_name, "error": "File not found"}
+                logger.error(f"PDF not found: {pdf_name}")
+                with processing_status_lock:
+                    processing_status[task_id]["errors"].append(error_info)
                 continue
             
             # Extract PDF content
@@ -1063,24 +1079,28 @@ def process_pdfs_background(task_id: str, pdf_names: List[str]):
             # Get page count (rough estimate from markdown)
             page_count = result.get("pages", "N/A")
             
-            processing_status[task_id]["results"].append({
+            result_info = {
                 "pdf": pdf_name,
                 "doc_id": doc_id,
                 "markdown_path": result["markdown_path"],
                 "pages": page_count,
                 "size": pdf_path.stat().st_size
-            })
+            }
+            with processing_status_lock:
+                processing_status[task_id]["results"].append(result_info)
             
         except Exception as e:
-            processing_status[task_id]["errors"].append({
-                "pdf": pdf_name,
-                "error": str(e)
-            })
+            error_info = {"pdf": pdf_name, "error": str(e)}
+            logger.error(f"Error processing {pdf_name}: {e}", exc_info=True)
+            with processing_status_lock:
+                processing_status[task_id]["errors"].append(error_info)
         
-        processing_status[task_id]["processed"] = idx + 1
+        with processing_status_lock:
+            processing_status[task_id]["processed"] = idx + 1
     
-    processing_status[task_id]["status"] = "completed"
-    processing_status[task_id]["current"] = None
+    with processing_status_lock:
+        processing_status[task_id]["status"] = "completed"
+        processing_status[task_id]["current"] = None
 
 
 @app.get("/api/process-status/{task_id}")
@@ -1211,15 +1231,18 @@ async def export_to_github_branch(
                             "content": content,
                             "encoding": "base64"
                         })
-                    except Exception:
-                        pass  # Skip files that can't be read
+                    except Exception as e:
+                        logger.warning(f"Could not read ChromaDB file {db_file}: {e}")
         
         # Commit files (GitHub API has limits, so we'll do this in batches)
         commit_message = f"Add processed outputs from Colab - {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
         
-        # For simplicity, we'll create a single commit with all text files
-        # Note: GitHub API has size limits, so large files may need special handling
-        for file_info in files_to_commit[:50]:  # Limit to 50 files to avoid API limits
+        # Track failed files for reporting
+        failed_files = []
+        successful_files = 0
+        
+        # Limit to avoid API rate limits
+        for file_info in files_to_commit[:MAX_FILES_PER_GITHUB_COMMIT]:
             try:
                 path = file_info["path"]
                 content = file_info["content"]
@@ -1235,7 +1258,7 @@ async def export_to_github_branch(
                         sha=existing_file.sha,
                         branch=branch_name
                     )
-                except:
+                except GithubException:
                     # File doesn't exist, create it
                     repo.create_file(
                         path=path,
@@ -1243,18 +1266,26 @@ async def export_to_github_branch(
                         content=content,
                         branch=branch_name
                     )
+                successful_files += 1
+                successful_files += 1
             except Exception as e:
-                # Continue with other files even if one fails
-                pass
+                logger.error(f"Failed to upload file {path} to GitHub: {e}")
+                failed_files.append(path)
         
         branch_url = f"https://github.com/{repo_owner}/{repo_name}/tree/{branch_name}"
         pr_url = f"https://github.com/{repo_owner}/{repo_name}/compare/{branch_name}"
         
+        message = f"Successfully created branch '{branch_name}' and pushed {successful_files} file(s)"
+        if failed_files:
+            message += f". {len(failed_files)} file(s) failed to upload."
+        
         return {
             "status": "success",
-            "message": f"Successfully created branch '{branch_name}' and pushed {len(files_to_commit)} file(s)",
+            "message": message,
             "branch_url": branch_url,
-            "create_pr_url": pr_url
+            "create_pr_url": pr_url,
+            "successful_files": successful_files,
+            "failed_files": failed_files if failed_files else None
         }
         
     except ImportError:
@@ -1349,7 +1380,11 @@ Generated: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
         # Commit files
         commit_message = f"Initial commit with processed outputs"
         
-        for file_info in files_to_commit[:50]:  # Limit to avoid API limits
+        # Track failed files for reporting
+        failed_files = []
+        successful_files = 0
+        
+        for file_info in files_to_commit[:MAX_FILES_PER_GITHUB_COMMIT]:
             try:
                 path = file_info["path"]
                 content = file_info["content"]
@@ -1359,15 +1394,23 @@ Generated: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
                     message=commit_message,
                     content=content
                 )
-            except Exception:
-                pass  # Continue with other files
+                successful_files += 1
+            except Exception as e:
+                logger.error(f"Failed to upload file {path} to GitHub: {e}")
+                failed_files.append(path)
         
         repo_url = repo.html_url
         
+        message = f"Successfully created repository '{repo_name}' with {successful_files} file(s)"
+        if failed_files:
+            message += f". {len(failed_files)} file(s) failed to upload."
+        
         return {
             "status": "success",
-            "message": f"Successfully created repository '{repo_name}' with {len(files_to_commit)} file(s)",
-            "repo_url": repo_url
+            "message": message,
+            "repo_url": repo_url,
+            "successful_files": successful_files,
+            "failed_files": failed_files if failed_files else None
         }
         
     except ImportError:
