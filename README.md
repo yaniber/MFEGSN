@@ -2,28 +2,68 @@
 
 Système complet pour l'extraction de contenu PDF et recherche sémantique (RAG) avec serveur MCP.
 
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/yaniber/MFEGSN/blob/main/MFEGSN_Colab.ipynb)
+
 ## 🚀 Fonctionnalités
 
 - **Upload de PDFs** : Interface web pour télécharger des fichiers PDF
+- **Import Google Drive** : Importez vos PDFs directement depuis Google Drive via Google Colab
 - **Extraction structurée** : Utilise Marker pour extraire texte, figures et références
 - **Conversion Markdown** : Convertit automatiquement les PDFs en format Markdown
 - **RAG (Retrieval-Augmented Generation)** : Indexation vectorielle avec ChromaDB
 - **Serveur MCP** : Serveur Model Context Protocol pour intégration VSCode
 - **Recherche sémantique** : Requêtes intelligentes sur les documents indexés
+- **Google Colab** : Exécutez l'application dans le cloud sans installation locale
+- **Ngrok Support** : Exposez votre application locale avec une URL publique
+- **Configuration API** : Support pour Google Drive API, GitHub PAT, et Ngrok
+
+## ⚙️ Configuration Optionnelle
+
+MFEGSN supporte plusieurs API keys optionnelles pour des fonctionnalités avancées :
+
+- **🌐 Ngrok** : Créez une URL publique pour votre serveur local ([Guide](API_KEYS.md#-ngrok-configuration))
+- **📁 Google Drive API** : Accès programmatique à Google Drive ([Guide](API_KEYS.md#-google-drive-api-key))
+- **🔑 GitHub PAT** : Push automatique vers GitHub depuis Colab ([Guide](API_KEYS.md#-github-personal-access-token-pat))
+
+📖 **[Guide complet de configuration des API keys](API_KEYS.md)**
 
 ## 📋 Prérequis
 
-### Option 1 : Docker (Recommandé)
+### Option 1 : Google Colab (Le plus simple !)
+- Un compte Google (gratuit)
+- Aucune installation nécessaire
+
+### Option 2 : Docker (Recommandé pour usage local)
 - Docker
 - Docker Compose
 
-### Option 2 : Installation locale
+### Option 3 : Installation locale
 - Python 3.8+
 - pip
 
 ## 🔧 Installation
 
-### 🐳 Option 1 : Avec Docker (Démarrage Rapide)
+### ☁️ Option 1 : Google Colab (Démarrage Instantané)
+
+**La méthode la plus rapide !** Aucune installation, exécution dans le cloud.
+
+1. Cliquez sur le badge ci-dessus ou visitez :
+   https://colab.research.google.com/github/yaniber/MFEGSN/blob/main/MFEGSN_Colab.ipynb
+
+2. Suivez les instructions dans le notebook pour :
+   - 📤 Uploader des PDFs ou les importer depuis Google Drive
+   - 🔍 Extraire et indexer vos documents
+   - 🔎 Effectuer des recherches sémantiques
+   - 💾 Sauvegarder les résultats vers Google Drive ou GitHub
+
+**Avantages :**
+- ✅ Aucune installation locale nécessaire
+- ✅ Import direct depuis Google Drive
+- ✅ GPU gratuit pour un traitement plus rapide
+- ✅ Sauvegarde facile vers Drive ou GitHub
+- ✅ Partage facile avec d'autres utilisateurs
+
+### 🐳 Option 2 : Avec Docker (Démarrage Rapide Local)
 
 **C'est la méthode la plus simple !** Tout est configuré automatiquement avec persistance des données.
 
@@ -40,6 +80,10 @@ chmod +x start.sh
 ```
 
 C'est tout ! L'application sera accessible sur http://localhost:8000
+
+**Le script lance automatiquement deux services Docker :**
+- 🌐 **Interface Web** : http://localhost:8000 (upload de PDFs, recherche)
+- 🔧 **Serveur MCP** : Tourne en arrière-plan pour intégration VSCode/Roo Code
 
 **Avantages :**
 - ✅ Aucune installation de dépendances Python nécessaire
@@ -58,7 +102,7 @@ docker compose logs               # Voir les logs (ou docker-compose logs)
 
 **Note** : Le script `start.sh` détecte automatiquement si vous utilisez Docker Compose v1 (`docker-compose`) ou v2 (`docker compose`).
 
-### 💻 Option 2 : Installation locale
+### 💻 Option 3 : Installation locale
 
 1. Cloner le repository :
 ```bash
@@ -86,7 +130,44 @@ cp .env.example .env
 
 ## 🎯 Utilisation
 
-### Interface Web
+### ☁️ Utilisation avec Google Colab
+
+**Le moyen le plus simple pour commencer !**
+
+1. **Ouvrir le notebook** : Cliquez sur le badge "Open in Colab" en haut de ce README
+
+2. **Importer des PDFs** :
+   - **Option A** : Montez Google Drive et importez depuis vos dossiers
+   - **Option B** : Uploadez directement depuis votre ordinateur
+
+3. **Traiter les documents** : Exécutez les cellules pour extraire et indexer
+
+4. **Effectuer des recherches** : Interrogez vos documents avec des requêtes sémantiques
+
+5. **Sauvegarder les résultats** :
+   
+   #### Sauvegarder vers Google Drive
+   ```python
+   # Dans le notebook Colab
+   GDRIVE_OUTPUT_FOLDER = "/content/drive/MyDrive/MFEGSN_Outputs"
+   # Exécutez la cellule de sauvegarde Drive
+   ```
+   
+   #### Sauvegarder vers GitHub (nouvelle branche)
+   ```python
+   # Dans le notebook Colab
+   # 1. Configurez Git avec vos informations
+   # 2. Créez une nouvelle branche automatiquement
+   # 3. Commitez vos outputs (PDFs, Markdown, base de données)
+   # 4. Poussez vers GitHub avec un Personal Access Token
+   ```
+   
+   **Instructions détaillées dans le notebook Colab** pour :
+   - Créer un Personal Access Token GitHub
+   - Pousser vers une nouvelle branche
+   - Créer une Pull Request pour merger vos données
+
+### 🌐 Interface Web
 
 Lancer l'interface web pour uploader et gérer les PDFs :
 
@@ -106,14 +187,39 @@ Fonctionnalités de l'interface :
 
 Le serveur MCP permet l'intégration avec VSCode Copilot et Roo Code.
 
-1. Lancer le serveur MCP :
+**Avec Docker (Recommandé)** : Le serveur MCP est **automatiquement lancé** en arrière-plan quand vous utilisez `./start.sh`. Aucune action supplémentaire nécessaire !
+
+**Sans Docker (Installation locale)** :
+1. Lancer le serveur MCP manuellement :
 ```bash
 python mcp_server/server.py
 ```
 
-2. Configuration VSCode :
+#### Configuration VSCode
 
-Ajouter dans votre configuration MCP VSCode (`.vscode/mcp_config.json` ou settings) :
+**Pour utiliser le serveur MCP avec VSCode**, vous avez deux options :
+
+##### Option 1 : Avec Docker (Recommandé)
+Le serveur MCP tourne déjà dans Docker ! Pour l'utiliser avec VSCode :
+
+1. Assurez-vous que les containers Docker sont démarrés (`./start.sh`)
+2. Ajoutez dans votre fichier `.vscode/mcp.json` :
+   ```json
+   {
+     "mcpServers": {
+       "pdf-rag-server": {
+         "command": "docker",
+         "args": ["exec", "-i", "pdf-rag-mcp", "python", "mcp_server/server.py"]
+       }
+     }
+   }
+   ```
+   *Note: Le nom `pdf-rag-mcp` correspond au `container_name` défini dans docker-compose.yml. Si vous modifiez le nom du container, mettez à jour cette configuration. Vérifiez avec `docker compose ps`.*
+
+3. **Alternative** : Accéder aux outils via l'interface web (http://localhost:8000)
+
+##### Option 2 : Installation locale (sans Docker)
+Ajouter dans votre fichier `.vscode/mcp.json` :
 
 ```json
 {

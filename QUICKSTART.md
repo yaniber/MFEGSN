@@ -2,7 +2,25 @@
 
 ## 🚀 Getting Started in 5 Minutes
 
-### Option 1: Docker (Recommandé - Plus Rapide!)
+### Option 1: Google Colab (Le Plus Rapide - Aucune Installation!)
+
+**Démarrez immédiatement dans le cloud, avec import depuis Google Drive !**
+
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/yaniber/MFEGSN/blob/main/MFEGSN_Colab.ipynb)
+
+1. Cliquez sur le badge ci-dessus
+2. Exécutez les cellules du notebook
+3. Importez vos PDFs depuis Google Drive ou uploadez-les
+4. Traitez et interrogez vos documents
+5. Sauvegardez vers Drive ou GitHub
+
+📖 **[Guide complet Google Colab](COLAB.md)** avec instructions détaillées pour sauvegarder vers GitHub.
+
+---
+
+### Option 2: Docker (Recommandé pour usage local)
+
+**Avec Docker, l'application web ET le serveur MCP sont lancés automatiquement !**
 
 #### 1. Prérequis
 - Docker installé ([Installation Docker](https://docs.docker.com/get-docker/))
@@ -21,6 +39,10 @@ chmod +x start.sh
 ```
 
 Ouvrez votre navigateur : **http://localhost:8000**
+
+**✅ Deux services Docker sont maintenant en cours d'exécution :**
+- 🌐 **Interface Web** : http://localhost:8000 (upload, recherche de documents)
+- 🔧 **Serveur MCP** : Arrière-plan (intégration VSCode Copilot/Roo Code)
 
 #### 3. Arrêter l'application
 
@@ -46,7 +68,7 @@ git push
 
 ---
 
-### Option 2: Installation Locale
+### Option 3: Installation Locale
 
 #### 1. Installation
 
@@ -92,18 +114,33 @@ Open your browser to: **http://localhost:8000**
 
 ## 🔌 VSCode Integration with MCP
 
-### Setup MCP in VSCode
+### Setup MCP in VSCode (Docker Version)
+
+If you're using the Docker setup (recommended), the MCP server is already running!
 
 1. Install the MCP extension in VSCode
-2. Add the following to your VSCode settings (`.vscode/settings.json`):
+2. Add the following to your VSCode MCP configuration file (`.vscode/mcp.json`):
 
+**Option A - Via Docker exec (Recommended for Docker setup):**
 ```json
 {
-  "mcp.servers": {
+  "mcpServers": {
+    "pdf-rag-server": {
+      "command": "docker",
+      "args": ["exec", "-i", "pdf-rag-mcp", "python", "mcp_server/server.py"]
+    }
+  }
+}
+```
+*Note: The `pdf-rag-mcp` container must be running. Launch `./start.sh` before starting VSCode. Verify with `docker compose ps`.*
+
+**Option B - Direct Python (for local installation):**
+```json
+{
+  "mcpServers": {
     "pdf-rag-server": {
       "command": "python",
-      "args": ["/absolute/path/to/MFEGSN/mcp_server/server.py"],
-      "env": {}
+      "args": ["/absolute/path/to/MFEGSN/mcp_server/server.py"]
     }
   }
 }

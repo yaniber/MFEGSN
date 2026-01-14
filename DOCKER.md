@@ -45,13 +45,13 @@ Le script `start.sh` va automatiquement :
 2. ✓ Créer les dossiers nécessaires (pdfs, markdown_outputs, chroma_db)
 3. ✓ Créer le fichier .env si nécessaire
 4. ✓ Construire les images Docker
-5. ✓ Démarrer les containers
+5. ✓ Démarrer les containers (web + MCP server)
 
 ### Accéder à l'application
 
 Une fois démarrée, l'application est accessible sur :
 - **Interface Web** : http://localhost:8000
-- **MCP Server** : Tourne en arrière-plan pour l'intégration VSCode
+- **MCP Server** : Tourne en arrière-plan (automatiquement) pour l'intégration VSCode
 
 ### Arrêter l'application
 
@@ -104,6 +104,9 @@ docker compose logs -f
 # Un container spécifique
 docker compose logs pdf-rag-web
 docker compose logs pdf-rag-mcp
+
+# Suivi en temps réel du serveur MCP uniquement (utile pour le debugging)
+docker compose logs -f pdf-rag-mcp
 ```
 
 ### Vérifier l'état des containers
@@ -150,10 +153,19 @@ docker compose down --rmi all
 
 ### Services
 
-Le fichier `docker-compose.yml` définit deux services :
+Le fichier `docker-compose.yml` définit deux services qui sont lancés automatiquement :
 
 1. **pdf-rag-web** : Interface web FastAPI (port 8000)
+   - Permet l'upload de PDFs
+   - Fournit une interface de recherche
+   - Affiche les statistiques de la collection
+
 2. **pdf-rag-mcp** : Serveur MCP pour l'intégration VSCode
+   - Tourne en arrière-plan (pas de port exposé)
+   - Communication via stdio (standard input/output)
+   - S'utilise avec VSCode Copilot ou Roo Code
+
+**Les deux services partagent les mêmes volumes de données** pour accéder aux PDFs, fichiers Markdown et base de données vectorielle.
 
 ### Image Docker
 
