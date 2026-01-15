@@ -4,6 +4,17 @@ Ce guide explique comment utiliser MFEGSN sur Google Colab pour importer des PDF
 
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/yaniber/MFEGSN/blob/main/MFEGSN_Colab.ipynb)
 
+## 🚀 Nouvelles Fonctionnalités
+
+Le notebook Colab a été amélioré avec de nouvelles fonctionnalités puissantes :
+
+- 🌐 **Interface Web avec URL Publique (Ngrok)** : Accédez à l'interface depuis n'importe où
+- ✅ **Sélection de PDFs** : Choisissez quels PDFs traiter via l'interface web
+- 📊 **Progression en Temps Réel** : Suivez le traitement de chaque PDF
+- 💾 **Export GitHub en Un Clic** : Créez une branche ou un nouveau repo automatiquement
+
+📖 **[Guide complet des nouvelles fonctionnalités](COLAB_FEATURES.md)**
+
 ## 🎯 Avantages de Google Colab
 
 - **Aucune installation** : Tout fonctionne dans le cloud
@@ -24,6 +35,54 @@ Le notebook inclut maintenant une cellule pour configurer vos API keys de maniè
 📖 **[Guide complet de configuration des API keys](API_KEYS.md)**
 
 Ces configurations sont **optionnelles** mais recommandées pour une expérience optimale.
+
+## 🌐 Utiliser l'Interface Web (Nouveau)
+
+### Lancement avec Ngrok
+
+Le notebook inclut maintenant la possibilité de lancer une interface web accessible publiquement via Ngrok :
+
+1. **Configurez votre token Ngrok** (voir section API Keys ci-dessus)
+2. **Lancez le serveur** en exécutant la cellule "Launch Web Interface with Ngrok"
+3. **Copiez l'URL publique** affichée dans la sortie
+4. **Ouvrez l'URL** dans votre navigateur
+
+### Fonctionnalités de l'Interface Web
+
+#### 1. Sélection et Traitement de PDFs
+- Cliquez sur "Refresh PDF List" pour voir tous les PDFs disponibles
+- Cochez les PDFs que vous souhaitez traiter
+- Cliquez sur "Process Selected PDFs"
+- Suivez la progression en temps réel avec la barre de progression
+
+#### 2. Export vers GitHub
+L'interface web permet d'exporter facilement vers GitHub :
+
+**Option A : Nouvelle Branche**
+- Choisissez "Create New Branch"
+- Entrez le nom de la branche (ex: `colab-outputs-2024`)
+- Entrez votre GitHub PAT
+- Cliquez sur "Export to GitHub"
+
+**Option B : Nouveau Repository**
+- Choisissez "Create New Repository"
+- Entrez le nom du repo (ex: `my-pdf-outputs`)
+- Choisissez public ou privé
+- Entrez votre GitHub PAT
+- Cliquez sur "Export to GitHub"
+
+Les fichiers exportés incluent :
+- Tous les fichiers Markdown générés
+- La base de données ChromaDB (fichiers texte)
+- Un fichier `manifest.json` avec les métadonnées
+- Un `README.md` automatique (nouveau repo uniquement)
+
+### Arrêt du Serveur
+
+Quand vous avez terminé, exécutez la cellule "Stop Web Server" pour :
+- Arrêter le serveur web
+- Fermer le tunnel Ngrok
+- Libérer les ressources
 
 ## 📤 Importer des PDFs depuis Google Drive
 

@@ -27,6 +27,9 @@ aiofiles>=23.0.0
 # Ngrok for public URL (Optional)
 pyngrok>=7.0.0
 
+# GitHub API (for automated saves)
+PyGithub>=2.1.0
+
 # Google API Client (Optional)
 google-api-python-client>=2.0.0
 google-auth-httplib2>=0.1.0
