@@ -24,28 +24,30 @@ Le notebook Colab a été amélioré avec de nouvelles fonctionnalités puissant
 - **Persistance** : Sauvegardez vos résultats facilement
 - **API Keys** : Configuration sécurisée des clés API (Google Drive, GitHub, Ngrok)
 
-## ⚙️ Configuration des API Keys (Optionnel)
+## 🌐 Utiliser l'Interface Web (Lancement en Une Étape) 🆕
 
-Le notebook inclut maintenant une cellule pour configurer vos API keys de manière sécurisée :
+### Lancement Simplifié avec Ngrok
 
-- **Google Drive API Key** : Pour accès programmatique à Drive
-- **GitHub Personal Access Token** : Pour push automatique vers GitHub
-- **Ngrok Authtoken** : Pour URL publique (si vous lancez l'interface web)
+Le notebook utilise maintenant un **lancement en une seule étape** ! Plus besoin de configurer les API keys séparément.
 
-📖 **[Guide complet de configuration des API keys](API_KEYS.md)**
+**Nouvelle approche simplifiée :**
 
-Ces configurations sont **optionnelles** mais recommandées pour une expérience optimale.
-
-## 🌐 Utiliser l'Interface Web (Nouveau)
-
-### Lancement avec Ngrok
-
-Le notebook inclut maintenant la possibilité de lancer une interface web accessible publiquement via Ngrok :
-
-1. **Configurez votre token Ngrok** (voir section API Keys ci-dessus)
-2. **Lancez le serveur** en exécutant la cellule "Launch Web Interface with Ngrok"
+1. **Exécutez la cellule "Launch Web Interface with Ngrok"**
+2. **Répondez aux invites interactives** :
+   - Ngrok authtoken (optionnel, pour URL publique)
+   - GitHub PAT (optionnel, pour export GitHub)
+   - Google Drive API key (optionnel, pour intégration Drive)
+   - *Appuyez sur Entrée pour ignorer n'importe quelle option*
 3. **Copiez l'URL publique** affichée dans la sortie
 4. **Ouvrez l'URL** dans votre navigateur
+
+**Avantages :**
+- ✅ **Une seule cellule** : Configuration et lancement combinés
+- ✅ **Détection automatique** : Réutilise les tokens déjà configurés
+- ✅ **Mode local** : Fonctionne sans Ngrok si vous préférez
+- ✅ **Instructions claires** : Messages guidés à chaque étape
+
+📖 **[Guide complet de configuration des API keys](API_KEYS.md)**
 
 ### Fonctionnalités de l'Interface Web
 

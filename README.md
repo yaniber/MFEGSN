@@ -16,6 +16,7 @@ Système complet pour l'extraction de contenu PDF et recherche sémantique (RAG)
 - **Google Colab** : Exécutez l'application dans le cloud sans installation locale
 - **Ngrok Support** : Exposez votre application locale avec une URL publique
 - **Configuration API** : Support pour Google Drive API, GitHub PAT, et Ngrok
+- **🆕 Lancement en Une Étape** : Configuration et lancement Ngrok combinés dans Colab
 
 ## ⚙️ Configuration Optionnelle
 
@@ -56,12 +57,18 @@ MFEGSN supporte plusieurs API keys optionnelles pour des fonctionnalités avanc�
    - 🔎 Effectuer des recherches sémantiques
    - 💾 Sauvegarder les résultats vers Google Drive ou GitHub
 
+3. **🆕 Lancement simplifié de l'interface web** :
+   - Une seule cellule pour configurer et lancer
+   - Invites interactives pour Ngrok, GitHub PAT, et Google Drive API
+   - Accès public via URL Ngrok (optionnel)
+
 **Avantages :**
 - ✅ Aucune installation locale nécessaire
 - ✅ Import direct depuis Google Drive
 - ✅ GPU gratuit pour un traitement plus rapide
 - ✅ Sauvegarde facile vers Drive ou GitHub
 - ✅ Partage facile avec d'autres utilisateurs
+- ✅ **Configuration en une étape** avec invites guidées
 
 ### 🐳 Option 2 : Avec Docker (Démarrage Rapide Local)
 
